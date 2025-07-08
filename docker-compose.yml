@@ -1,0 +1,10 @@
+services:
+  validade-service:
+    build: ./validade-service
+    ports:
+      - "5000:5000"
+
+  recomendacao-service:
+    build: ./recomendacao-service
+    ports:
+      - "5001:5001"

@@ -1,1 +1,0 @@
-# Trabalho do Sistema Distribuídos
