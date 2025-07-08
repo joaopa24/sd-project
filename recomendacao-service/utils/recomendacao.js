@@ -37,4 +37,3 @@ async function gerarRecomendacaoSupermercado(produto, avaliacao) {
 }
 
 module.exports = { gerarRecomendacaoSupermercado };
-

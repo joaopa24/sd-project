@@ -1,7 +1,7 @@
 const express = require('express');
 const autenticarToken = require('./authMiddleware');
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
+const autenticarToken = require('./authMiddleware');
 const app = express();
 require('dotenv').config();
 
