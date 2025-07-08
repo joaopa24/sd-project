@@ -67,9 +67,9 @@ Descrever a estrutura inicial do sistema distribuído baseado em agentes, antes 
 
 | Falha de Segurança Identificada                        | Vulnerabilidade Principal                                                                 | Categorias STRIDE Afetadas                                                                                   |
 | :----------------------------------------------------- | :---------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| Sem autenticação entre agentes                         | Acesso não autorizado a endpoints                                                         | **S**poofing (Falsificação), **T**ampering (Violação)                                                        |
-| Risco de injeção e falhas por payloads inesperados     | Execução de código arbitrário, negação de serviço, vazamento de dados                     | **T**ampering (Violação), **I**nformation Disclosure (Divulgação de Informações), **D**enial of Service (Negação de Serviço) |
-| Logs com estruturas circulares ou dados sensíveis      | Vazamento de informações confidenciais, dificulta análise de logs, negação de serviço     | **I**nformation Disclosure (Divulgação de Informações), **D**enial of Service (Negação de Serviço)           |
+| Sem autenticação entre agentes                         | Acesso não autorizado a endpoints                                                         | **S**poofing (Falsificação), Tampering                                                        |
+| Risco de injeção e falhas por payloads inesperados     | Execução de código arbitrário, negação de serviço, vazamento de dados                     | Tampering, Information Disclosure, Denial of Service |
+| Logs com estruturas circulares ou dados sensíveis      | Vazamento de informações confidenciais, dificulta análise de logs, negação de serviço     | Information Disclosure, Denial of Service          |
 
 # Visão Arquitetônica Final (Pós-modelagem de Ameaças)
 
@@ -95,9 +95,9 @@ Descrever a estrutura inicial do sistema distribuído baseado em agentes, antes 
 ```
 
 ## Boas práticas implementadas
-- Comunicação controlada via headers de autenticação
-- Validação de entrada robusta nos endpoints
-- Logs otimizados e sem vazamento de estruturas circulares
+- Comunicação controlada via headers de autenticação, garantindo que apenas agentes autorizados possam consumir os serviços.
+- Validação de entrada robusta nos endpoints, prevenindo ataques como injeção e acesso indevido.
+- Logs otimizados e sem vazamento de estruturas circulares ou dados sensíveis, facilitando a auditoria e o debug com segurança.
 - Possibilidade de expansão para autenticação com JWT real
 
 ## Status
