@@ -3,9 +3,10 @@ const autenticarToken = require('./authMiddleware');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const app = express();
+const jwt = require('jsonwebtoken');
+const secret = 'teste';
 require('dotenv').config();
 
-const secret = "teste";
 app.use(express.json());
 
 app.post('/sugestao', autenticarToken ,async (req, res) => {
