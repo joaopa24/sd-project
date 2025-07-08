@@ -1,18 +1,25 @@
 const express = require('express');
 const autenticarToken = require('./authMiddleware');
+const { gerarRecomendacaoSupermercado } = require('./utils/recomendacao');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const app = express();
-const jwt = require('jsonwebtoken');
 const secret = 'teste';
-require('dotenv').config();
 
 app.use(express.json());
 
-app.post('/sugestao', autenticarToken ,async (req, res) => {
+app.post('/sugestao', autenticarToken, async (req, res) => {
   try {
-    // Buscar produtos com avaliação no endpoint /alertas do Validation Agent
-    const response = await axios.get('http://validade-service:5000/alertas');
+    // Recuperar o token da requisição original
+    let token = req.headers['authorization'] || '';
+    token = token.replace(/^bearer /i, 'Bearer ');  // Garante prefixo correto
+
+    // Buscar produtos com avaliação no endpoint /alertas do Validation Agent, enviando o token
+    const response = await axios.get('http://validade-service:5000/alertas', {
+      headers: {
+        Authorization: token
+      }
+    });
     const produtosComAvaliacoes = response.data;
 
     if (!Array.isArray(produtosComAvaliacoes) || produtosComAvaliacoes.length === 0) {

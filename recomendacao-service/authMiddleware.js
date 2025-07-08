@@ -1,21 +1,27 @@
-// authMiddleware.js
 const jwt = require('jsonwebtoken');
-
 const secret = 'teste';
 
 function autenticarToken(req, res, next) {
-  const authHeader = req.headers['authorization']; // Ex: 'Bearer tokenAqui'
-  console.log(authHeader);
-  const token = authHeader && authHeader.split(' ')[1];
-  console.log(token);
-  if (!token) return res.status(401).json({ error: 'Token não fornecido' });
+  const authHeader = req.headers['authorization'];
 
-  jwt.verify(token, secret, (err, user) => {
-    if (err) return res.status(403).json({ error: 'Token inválido' });
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Token não fornecido' });
+  }
 
-    req.user = user; // opcional: dados decodificados do token
+  const token = authHeader.split(' ')[1]; // Pega só o token após "Bearer"
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token mal formatado' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, secret);
+    req.user = decoded;
     next();
-  });
+  } catch (error) {
+    console.error('Erro ao verificar token JWT:', error.message);
+    return res.status(403).json({ error: 'Token inválido', details: error.message });
+  }
 }
 
 module.exports = autenticarToken;
