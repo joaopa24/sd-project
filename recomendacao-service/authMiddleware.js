@@ -5,8 +5,9 @@ const jwtSecret = process.env.JWT_SECRET;
 
 function autenticarToken(req, res, next) {
   const authHeader = req.headers['authorization']; // Ex: 'Bearer tokenAqui'
+  console.log(authHeader);
   const token = authHeader && authHeader.split(' ')[1];
-
+  console.log(token);
   if (!token) return res.status(401).json({ error: 'Token não fornecido' });
 
   jwt.verify(token, jwtSecret, (err, user) => {
