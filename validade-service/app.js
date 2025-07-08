@@ -11,14 +11,15 @@ const OLLAMA_URL = 'http://host.docker.internal:11434/api/generate'; // URL do O
 
 async function avaliarRiscoLLM(produto) {
   const prompt = `Você é um assistente que avalia risco de desperdício de alimentos baseado no nome e data de validade.  
-    Produto: ${produto.nome}  
-    Data de validade: ${produto.validade}  
-    Classifique o risco como ALTO, MÉDIO ou BAIXO e explique resumidamente.`;
+Produto: ${produto.nome}  
+Data de validade: ${produto.validade}  
+Classifique o risco como ALTO, MÉDIO ou BAIXO e explique resumidamente.`;
 
   try {
     const response = await axios.post(OLLAMA_URL, {
       model: 'mistral', // ajuste conforme modelo local
       prompt: prompt,
+      stream: false
     });
     const texto = response.data.response;
     return texto;
@@ -37,6 +38,11 @@ app.post('/produtos', (req, res) => {
   produtos.push(produto);
   salvarProdutos(produtos);
   res.json({ message: 'Produto cadastrado com sucesso.' });
+});
+
+// Endpoint para listar todos os produtos cadastrados
+app.get('/produtos', (req, res) => {
+  res.json(produtos);
 });
 
 // Endpoint para avaliar um único produto (para uso interno/external Recommendation Service)
