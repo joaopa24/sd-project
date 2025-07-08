@@ -1,3 +1,5 @@
+# Trabalho de Sistemas Distribuidos
+
 **A dor que o projeto resolve**
 
 O desperdício de alimentos é uma das maiores contradições da sociedade contemporânea. Enquanto milhões de pessoas vivem em situação de insegurança alimentar, toneladas de alimentos perfeitamente consumíveis são descartadas diariamente, principalmente no varejo alimentar, como supermercados. Esse desperdício impacta financeiramente os estabelecimentos, sobrecarrega o meio ambiente e ignora o potencial de impacto social positivo que a redistribuição dos alimentos poderia gerar.
@@ -31,3 +33,67 @@ ABRAS: https://abras.com.br
 
 UNIFAGOC (2022): Prevenção do desperdício de alimentos no setor supermercadista https://revista.unifagoc.edu.br/caderno/article/view/956?
 
+# Visão Arquitetônica Inicial (Pré-modelagem de Ameaças)
+
+## Objetivo
+Descrever a estrutura inicial do sistema distribuído baseado em agentes, antes da análise de ameaças e aplicação de mitigação.
+
+## Componentes
+- **Usuário**: cliente externo que envia requisições HTTP
+- **Validade Agent** (`porta 5000`): responsável por cadastrar produtos e avaliar riscos usando modelo LLM (via Ollama)
+- **Recomendação Agent** (`porta 5001`): consome avaliações do Validade Agent e gera sugestões
+- **Ollama (LLM Server)**: modelo local acessado por ambos os agentes via HTTP
+
+## Comunicação A2A
+```
+[Usuário]
+   |
+   | POST /produtos, GET /alertas
+   v
+[Validade Agent] -----> [Ollama local]
+   |
+   | GET /alertas
+   v
+[Recomendação Agent] -----> [Ollama local]
+```
+
+## Falhas de Segurança Identificadas (ainda não mitigadas)
+- Sem autenticação entre agentes
+- Sem criptografia ou uso de TLS
+- Comunicação direta com Ollama exposta
+- Validação mínima de campos obrigatórios
+- Risco de injeção e falhas por payloads inesperados
+
+# Visão Arquitetônica Final (Pós-modelagem de Ameaças)
+
+## Mudanças aplicadas após identificação de riscos
+
+| Ameaça identificada                        | Impacto | Mitigação aplicada                                   |
+|-------------------------------------------|---------|------------------------------------------------------|
+| Payload malicioso (injeção)               | Alto    | Validação estrita de campos obrigatórios             |
+| Exposição do Ollama                       | Médio   | Ollama isolado via rede interna no Docker Compose    |
+| Falta de autenticação entre agentes       | Médio   | Uso de token estático ou JWT para autorização        |
+| Falha na comunicação com LLM              | Médio   | Axios com timeout + fallback de erro                 |
+| Log com estruturas circulares/sensíveis   | Baixo   | Logs simplificados e seguros                         |
+
+## Novo Diagrama de Comunicação
+```
+[Usuário]
+   |
+   | POST /produtos (validação + limites)
+   v
+[Validade Agent] --(token)---> [Ollama (restrito)]
+   |
+   | GET /alertas (com header Authorization)
+   v
+[Recomendação Agent] --(token)---> [Ollama (restrito)]
+```
+
+## Boas práticas implementadas
+- Comunicação controlada via headers de autenticação
+- Validação de entrada robusta nos endpoints
+- Logs otimizados e sem vazamento de estruturas circulares
+- Possibilidade de expansão para autenticação com JWT real
+
+## Status
+✅ Arquitetura segura e modularizada, apta para containerização e escalabilidade.
