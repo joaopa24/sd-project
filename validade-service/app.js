@@ -3,6 +3,7 @@ const autenticarToken = require('./authMiddleware');
 const { salvarProdutos, carregarProdutos } = require('./utils/storage');
 const axios = require('axios');
 
+const secret = "teste";
 const app = express();
 app.use(express.json());
 
@@ -70,6 +71,20 @@ app.get('/alertas', autenticarToken, async (req, res) => {
     console.error('Erro ao gerar alertas:', err.message);
     res.status(500).json({ error: 'Erro ao gerar alertas' });
   }
+});
+
+app.post('/login', (req, res) => {
+  // Aqui, validar credenciais (exemplo simples)
+  const { username, password } = req.body;
+
+  // Simulação de usuário fixo
+  if (username === 'admin' && password === 'senha123') {
+    const user = { name: username };
+    const token = jwt.sign(user, secret, { expiresIn: '1h' });
+    return res.json({ token });
+  }
+
+  return res.status(401).json({ error: 'Usuário ou senha inválidos' });
 });
 
 app.listen(5000, () => console.log('Validade Agent rodando na porta 5000'));
