@@ -1,7 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const autenticarToken = require('./authMiddleware');
-const { gerarRecomendacaoSupermercado } = require('./utils/recomendacao');
 
 const app = express();
 app.use(express.json());
@@ -9,7 +7,7 @@ app.use(express.json());
 app.post('/sugestao', autenticarToken ,async (req, res) => {
   try {
     // Buscar produtos com avaliação no endpoint /alertas do Validation Agent
-    const response = await axios.get('http://localhost:5000/alertas');
+    const response = await axios.get('http://validade-service:5000/alertas');
     const produtosComAvaliacoes = response.data;
 
     if (!Array.isArray(produtosComAvaliacoes) || produtosComAvaliacoes.length === 0) {
