@@ -58,23 +58,19 @@ Descrever a estrutura inicial do sistema distribuído baseado em agentes, antes 
 ```
 
 ## Falhas de Segurança Identificadas (ainda não mitigadas)
-- Sem autenticação entre agentes
-- Sem criptografia ou uso de TLS
-- Comunicação direta com Ollama exposta
-- Validação mínima de campos obrigatórios
+- Sem autenticação entre agentes, em endpoints.
 - Risco de injeção e falhas por payloads inesperados
+- Logs com estruturas circulares ou dados sensíveis.
 
 # Visão Arquitetônica Final (Pós-modelagem de Ameaças)
 
 ## Mudanças aplicadas após identificação de riscos
 
-| Ameaça identificada                        | Impacto | Mitigação aplicada                                   |
+| Ameaça identificada                        | Impacto | Mitigação aplicada                                  |
 |-------------------------------------------|---------|------------------------------------------------------|
 | Payload malicioso (injeção)               | Alto    | Validação estrita de campos obrigatórios             |
-| Exposição do Ollama                       | Médio   | Ollama isolado via rede interna no Docker Compose    |
-| Falta de autenticação entre agentes       | Médio   | Uso de token estático ou JWT para autorização        |
-| Falha na comunicação com LLM              | Médio   | Axios com timeout + fallback de erro                 |
-| Log com estruturas circulares/sensíveis   | Baixo   | Logs simplificados e seguros                         |
+| Logs simplificados                        | Médio   | Logs simplificados, evitando vazamento de informações sensíveis e problemas com dados circulares em logs. |
+| Falta de autenticação entre agentes      | Alto    | Uso de token estático ou JWT para autorização        |
 
 ## Novo Diagrama de Comunicação
 ```
