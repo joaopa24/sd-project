@@ -24,7 +24,10 @@ Diversas organizações já destacam a urgência de soluções tecnológicas par
 **Referências**
 
 FAO: https://www.fao.org/sustainable-development-goals/news/detail-news/en/c/1275712/
+
 EMBRAPA: https://www.embrapa.br/busca-de-noticias/-/noticia/50192502
+
 ABRAS: https://abras.com.br
-UNIFAGOC (2022): Prevenção do desperdício de alimentos no setor supermercadista
+
+UNIFAGOC (2022): Prevenção do desperdício de alimentos no setor supermercadista https://revista.unifagoc.edu.br/caderno/article/view/956?
 
