@@ -1,6 +1,6 @@
 const express = require('express');
 const axios = require('axios');
-
+const autenticarToken = require('./authMiddleware');
 const app = express();
 app.use(express.json());
 
