@@ -67,7 +67,7 @@ Descrever a estrutura inicial do sistema distribuído baseado em agentes, antes 
 
 | Falha de Segurança Identificada                        | Vulnerabilidade Principal                                                                 | Categorias STRIDE Afetadas                                                                                   |
 | :----------------------------------------------------- | :---------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| Sem autenticação entre agentes                         | Acesso não autorizado a endpoints                                                         | **S**poofing (Falsificação), Tampering                                                        |
+| Sem autenticação entre agentes                         | Acesso não autorizado a endpoints                                                         | Spoofing, Tampering                                                        |
 | Risco de injeção e falhas por payloads inesperados     | Execução de código arbitrário, negação de serviço, vazamento de dados                     | Tampering, Information Disclosure, Denial of Service |
 | Logs com estruturas circulares ou dados sensíveis      | Vazamento de informações confidenciais, dificulta análise de logs, negação de serviço     | Information Disclosure, Denial of Service          |
 
