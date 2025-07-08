@@ -1,4 +1,5 @@
 const express = require('express');
+const autenticarToken = require('./authMiddleware');
 const { salvarProdutos, carregarProdutos } = require('./utils/storage');
 const axios = require('axios');
 
@@ -30,7 +31,7 @@ Classifique o risco como ALTO, MÉDIO ou BAIXO e explique resumidamente.`;
 }
 
 // Endpoint para cadastro do produto
-app.post('/produtos', (req, res) => {
+app.post('/produtos', autenticarToken, (req, res) => {
   const produto = req.body;
   if (!produto.nome || !produto.validade) {
     return res.status(400).json({ error: 'Campos nome e validade são obrigatórios.' });
@@ -46,7 +47,7 @@ app.get('/produtos', (req, res) => {
 });
 
 // Endpoint para avaliar um único produto (para uso interno/external Recommendation Service)
-app.post('/avaliar', async (req, res) => {
+app.post('/avaliar', autenticarToken, async (req, res) => {
   const produto = req.body;
   if (!produto.nome || !produto.validade) {
     return res.status(400).json({ error: 'Campos nome e validade são obrigatórios.' });
@@ -56,7 +57,7 @@ app.post('/avaliar', async (req, res) => {
 });
 
 // Endpoint para retornar alertas de todos os produtos, avaliando em paralelo
-app.get('/alertas', async (req, res) => {
+app.get('/alertas', autenticarToken, async (req, res) => {
   try {
     const avaliacoes = await Promise.all(
       produtos.map(async (produto) => {

@@ -25,3 +25,6 @@ Forneça a resposta como uma recomendação objetiva e curta, por exemplo: "Cria
     return 'Recomendação indisponível no momento.';
   }
 }
+
+module.exports = { gerarRecomendacaoSupermercado };
+
