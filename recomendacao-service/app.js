@@ -1,8 +1,9 @@
 const express = require('express');
 const autenticarToken = require('./authMiddleware');
 const axios = require('axios');
-const autenticarToken = require('./authMiddleware');
 const app = express();
+const jwt = require('jsonwebtoken');
+const secret = 'teste';
 require('dotenv').config();
 
 app.use(express.json());
@@ -43,7 +44,7 @@ app.post('/login', (req, res) => {
   // Simulação de usuário fixo
   if (username === 'admin' && password === 'senha123') {
     const user = { name: username };
-    const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(user, secret, { expiresIn: '1h' });
     return res.json({ token });
   }
 
