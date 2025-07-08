@@ -7,21 +7,20 @@ app.use(express.json());
 
 let produtos = carregarProdutos();
 
-const OLLAMA_URL = 'http://localhost:11434/llm/predict'; // URL do Ollama local
+const OLLAMA_URL = 'http://host.docker.internal:11434/api/generate'; // URL do Ollama local
 
 async function avaliarRiscoLLM(produto) {
   const prompt = `Você é um assistente que avalia risco de desperdício de alimentos baseado no nome e data de validade.  
-Produto: ${produto.nome}  
-Data de validade: ${produto.validade}  
-Classifique o risco como ALTO, MÉDIO ou BAIXO e explique resumidamente.`;
+    Produto: ${produto.nome}  
+    Data de validade: ${produto.validade}  
+    Classifique o risco como ALTO, MÉDIO ou BAIXO e explique resumidamente.`;
 
   try {
     const response = await axios.post(OLLAMA_URL, {
-      model: 'gpt4o-mini', // ajuste conforme modelo local
+      model: 'mistral', // ajuste conforme modelo local
       prompt: prompt,
     });
-
-    const texto = response.data.completion || 'Resposta inválida';
+    const texto = response.data.response;
     return texto;
   } catch (err) {
     console.error('Erro Ollama:', err.message);
