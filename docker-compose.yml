@@ -1,10 +1,19 @@
+version: '3.8'  # Defina versão para melhor compatibilidade
 services:
   validade-service:
     build: ./validade-service
     ports:
       - "5000:5000"
+    networks:
+      - app-network
 
   recomendacao-service:
     build: ./recomendacao-service
     ports:
       - "5001:5001"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

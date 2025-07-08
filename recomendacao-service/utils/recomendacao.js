@@ -1,21 +1,27 @@
 const axios = require('axios');
 
-async function gerarSugestaoMitral(produto) {
+async function obterAvaliacaoRisco(produto) {
   try {
-    const response = await axios.post('https://api.mitral.ai/v1/completions', {
-      prompt: `Sugira o que fazer com o produto ${produto.nome} que vence em breve.`,
-      // Insira aqui os parâmetros reais da API da Mitral
-    }, {
-      headers: {
-        'Authorization': 'Bearer SEU_TOKEN_DA_MITRAL_AQUI',
-        'Content-Type': 'application/json',
-      }
-    });
-
-    return response.data.suggestion;  // Ajuste conforme a resposta da API da Mitral
+    // Supondo que o Validate Agent tenha um endpoint para avaliar um único produto
+    const response = await axios.post('http://localhost:5000/avaliar', produto);
+    return response.data.avaliacao; // texto com risco ALTO, MÉDIO, BAIXO
   } catch (error) {
-    console.error('Erro ao acessar API da Mitral:', error.message);
-    return 'Não foi possível gerar sugestão.';
+    console.error('Erro ao obter avaliação do Validate Agent:', error.message);
+    return 'Avaliação indisponível';
+  }
+}
+
+async function gerarSugestaoMitral(produto) {
+  const avaliacao = await obterAvaliacaoRisco(produto);
+
+  if (avaliacao.includes('ALTO')) {
+    return 'Descartar o produto imediatamente para evitar desperdício.';
+  } else if (avaliacao.includes('MÉDIO')) {
+    return 'Consumir o produto em breve para evitar perdas.';
+  } else if (avaliacao.includes('BAIXO')) {
+    return 'Produto dentro do prazo, sem urgência.';
+  } else {
+    return 'Sem recomendação específica.';
   }
 }
 
