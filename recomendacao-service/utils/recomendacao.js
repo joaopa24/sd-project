@@ -1,28 +1,27 @@
 const axios = require('axios');
 
-async function obterAvaliacaoRisco(produto) {
+async function gerarRecomendacaoSupermercado(produto, avaliacao) {
+  const prompt = `
+Você é um especialista em gestão de estoque para supermercados focado em minimizar perdas.
+
+Produto: ${produto.nome}
+Validade: ${produto.validade}
+Avaliação detalhada: ${avaliacao.trim()}
+
+Com base nessa avaliação, informe qual ação o supermercado deve tomar para evitar perdas, escolhendo entre as opções: "Criar promoção", "Manter na prateleira", "Transferir para área de promoção", "Descarte imediato" ou "Reavaliar estoque".
+
+Forneça a resposta como uma recomendação objetiva e curta, por exemplo: "Criar promoção", ou "Manter na prateleira normalmente".
+`;
+
   try {
-    // Supondo que o Validate Agent tenha um endpoint para avaliar um único produto
-    const response = await axios.post('http://localhost:5000/avaliar', produto);
-    return response.data.avaliacao; // texto com risco ALTO, MÉDIO, BAIXO
+    const response = await axios.post('http://localhost:11434/api/generate', {
+      model: 'mistral',
+      prompt: prompt,
+      stream: false
+    });
+    return response.data.response.trim();
   } catch (error) {
-    console.error('Erro ao obter avaliação do Validate Agent:', error.message);
-    return 'Avaliação indisponível';
+    console.error('Erro ao gerar recomendação com LLM:', error.message);
+    return 'Recomendação indisponível no momento.';
   }
 }
-
-async function gerarSugestaoMitral(produto) {
-  const avaliacao = await obterAvaliacaoRisco(produto);
-
-  if (avaliacao.includes('ALTO')) {
-    return 'Descartar o produto imediatamente para evitar desperdício.';
-  } else if (avaliacao.includes('MÉDIO')) {
-    return 'Consumir o produto em breve para evitar perdas.';
-  } else if (avaliacao.includes('BAIXO')) {
-    return 'Produto dentro do prazo, sem urgência.';
-  } else {
-    return 'Sem recomendação específica.';
-  }
-}
-
-module.exports = { gerarSugestaoMitral };
